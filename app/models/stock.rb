@@ -1,5 +1,8 @@
 class Stock < ActiveRecord::Base
   
+  has_many :user_stocks
+  has_many :users, through: :user_stocks
+  
   def self.find_by_ticket(ticker_symbol)
     where(ticker: ticker_symbol).first
   end
@@ -13,12 +16,14 @@ class Stock < ActiveRecord::Base
     new_stock
   end
   
+  
+  
   def price
-    closing_price = StockQuote::Stock.quote(ticker).close
-    return "#{closing_price}  (closing)" if closing_price 
-    
-    opening_price = StockQuote::Stock.quote(ticker).open
-    return "#{opening_price}  (opening)" if opening_price 
-    'Unavaliable'
+      closing_price = StockQuote::Stock.quote(ticker).close
+      return "#{closing_price} (Closing)" if closing_price
+      opening_price = StockQuote::Stock.quote(ticker).open
+      return "#{opening_price} (Opening)" if opening_price
+     'Unavailable'
   end
+  
 end
